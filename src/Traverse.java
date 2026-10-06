@@ -29,7 +29,7 @@ public class Traverse {
     eve.getConfidants().addAll(Arrays.asList(frank, irene));
     frank.getConfidants().addAll(Arrays.asList(bob, grace));
     grace.getConfidants().add(henry);
-    henry.getConfidants().addAll(Arrays.asList(alice, diana));
+    // henry.getConfidants().addAll(Arrays.asList(alice, diana));
     irene.getConfidants().addAll(Arrays.asList(jack, diana));
     jack.getConfidants().addAll(Arrays.asList(charlie, bob));
 
@@ -69,5 +69,45 @@ public class Traverse {
     v45.neighbors = new ArrayList<>(List.of(v23));
     v23.neighbors = new ArrayList<>(List.of());
     v67.neighbors = new ArrayList<>(List.of(v91));
+
+    printLoudMouths(grace);
+
+    System.out.print(minReachable(graph, 78));
+  }
+
+  public static int minReachable(Map<Integer, Set<Integer>> graph, int start){
+    if(graph == null) throw new NullPointerException("Cannot find minimum of missing graph");
+    return minReachable(graph, start, new HashSet<>());
+  }
+  private static int minReachable(Map<Integer, Set<Integer>> graph, int current, Set<Integer> seen){
+    // if(graph == null) return Integer.MAX_VALUE;
+    if(seen.contains(current)) return Integer.MAX_VALUE;
+    seen.add(current);
+
+    int min = current;
+
+    for (int neighbor :graph.get(current)){
+      int minNeighbor = minReachable(graph, neighbor, seen);
+
+      if(minNeighbor < min) min = minNeighbor;
+    }
+    return min;
+  }
+
+  public static void printLoudMouths(Person initial){
+    // add current to a set
+    Set<Person> beenThere = new HashSet<>(); 
+  }
+  private static void printLoudMouths(Person current, Set<Person> beenThere){
+    if(current == null || beenThere.contains(current)){
+      return;
+    }
+
+    beenThere.add(current);
+    System.out.println(current.getName());
+
+    for(Person confidant : current.getConfidants()){
+      printLoudMouths(confidant, beenThere);
+    }
   }
 }
